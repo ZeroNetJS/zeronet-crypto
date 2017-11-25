@@ -30,10 +30,12 @@ const samples = {
 }
 
 const assert = require("assert")
-const crypto = require("zeronet-crypto")
+const crypto = require("../src")
 const cp = require("child_process")
 const bl = require("bl")
 const path = require("path")
+
+it.python = it.skip //TODO: readd
 
 describe("json", () => {
   for (let sample in samples) {

@@ -6,7 +6,7 @@ const toPull = require("stream-to-pull-stream")
 const Connection = require("interface-connection").Connection
 const sslConfig = require("ssl-config")("modern")
 
-const gen = require("zeronet-crypto/gen")
+const gen = require("./gen")
 
 const debug = require("debug")
 const log = debug("zeronet:crypto:tls")

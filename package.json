@@ -16,7 +16,8 @@
     "coverage-publish": "aegir-coverage publish"
   },
   "browser": {
-    "openssl.js": "no-openssl.js"
+    "src/transport/tls/openssl.js": "./src/transport/tls/no-openssl.js",
+    "src/transport/tls/node.js": "./src/transport/tls/browser.js"
   },
   "keywords": [
     "zeronet",
@@ -37,9 +38,9 @@
     "data-queue": "0.0.3",
     "interface-connection": "^0.3.2",
     "libp2p-secio": "^0.8.1",
+    "multiaddr": "^3.0.1",
     "node-forge": "^0.7.1",
     "pull-stream-to-net-socket": "^1.0.0",
-    "pull-stream-to-stream": "^1.3.4",
     "shell-escape": "^0.2.0",
     "ssl-config": "^1.0.0",
     "stream-to-pull-stream": "^1.7.2"
