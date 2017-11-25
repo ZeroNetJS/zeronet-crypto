@@ -1,9 +1,9 @@
-"use strict"
+'use strict'
 
 const crypto_data = {
-  "secio": require("../src").secio,
-  "tls-rsa": require("../src").tls_rsa,
-  //"tls-ecc": require("../src").tls_ecc
+  secio: require('../src').secio,
+  'tls-rsa': require('../src').tls_rsa,
+  //'tls-ecc': require('../src').tls_ecc
 }
 
 const cryptos = Object.keys(crypto_data).map(c => {
@@ -13,21 +13,21 @@ const cryptos = Object.keys(crypto_data).map(c => {
   }
 })
 
-//const ZeroNet = require("zeronet")
+//const ZeroNet = require('zeronet')
 
-const multiaddr = require("multiaddr")
+const multiaddr = require('multiaddr')
 
 let node
 
-describe.skip("handshake", () => {
+describe.skip('handshake', () => {
   cryptos.forEach(crypto => {
-    it("should handshake with " + crypto.name, (cb) => {
+    it('should handshake with ' + crypto.name, (cb) => {
       node = ZeroNet({
         id: global.id,
         swarm: {
           zero: {
             listen: [
-              "/ip4/127.0.0.1/tcp/25335"
+              '/ip4/127.0.0.1/tcp/25335'
             ],
             crypto: crypto.fnc
           }
@@ -36,9 +36,9 @@ describe.skip("handshake", () => {
       node.start(err => {
         if (err) return cb(err)
 
-        node.swarm.dial(multiaddr("/ip4/127.0.0.1/tcp/25335"), (e, c) => {
+        node.swarm.dial(multiaddr('/ip4/127.0.0.1/tcp/25335'), (e, c) => {
           if (e) return cb(e)
-          if (c.handshakeData.commonCrypto() != crypto.name) return cb(new Error("Failing: Wrong crypto used " + c.handshakeData.commonCrypto() + " != " + crypto.name))
+          if (c.handshakeData.commonCrypto() != crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != ' + crypto.name))
           c.cmd.ping({}, cb)
         })
       })

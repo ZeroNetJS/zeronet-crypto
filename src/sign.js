@@ -1,6 +1,6 @@
-"use strict"
+'use strict'
 
-const btcMessage = require("bitcoinjs-message")
+const btcMessage = require('bitcoinjs-message')
 
 /**
   Verifies a bitcoin signature
@@ -10,7 +10,7 @@ const btcMessage = require("bitcoinjs-message")
   * @return {boolean} - Returns wether the signature was valid and signed with the key
   */
 function VerifySig(address, data, sig) {
-  return btcMessage.verify(data, address, sig, "\x18Bitcoin Signed Message:\n")
+  return btcMessage.verify(data, address, sig, '\x18Bitcoin Signed Message:\n')
 }
 
 /**
@@ -21,28 +21,28 @@ function VerifySig(address, data, sig) {
   */
 function OrderObject(unordered) {
   const ordered = {}
-  if (typeof unordered != "object" || unordered == null || Array.isArray(unordered)) return unordered
+  if (typeof unordered != 'object' || unordered == null || Array.isArray(unordered)) return unordered
   Object.keys(unordered).sort().forEach(function (key) {
-    ordered[key] = ((typeof unordered[key] == "object") && !Array.isArray(unordered[key])) ? OrderObject(unordered[key]) : unordered[key]
+    ordered[key] = ((typeof unordered[key] == 'object') && !Array.isArray(unordered[key])) ? OrderObject(unordered[key]) : unordered[key]
   })
   return ordered
 }
 
 function padWithLeadingZeros(string) {
-  return new Array(5 - string.length).join("0") + string;
+  return new Array(5 - string.length).join('0') + string;
 }
 
 function unicodeCharEscape(charCode) {
-  return "\\u" + padWithLeadingZeros(charCode.toString(16));
+  return '\\u' + padWithLeadingZeros(charCode.toString(16));
 }
 
 function unicodeEscape(string) {
-  return string.split("")
+  return string.split('')
     .map(function (char) {
       const charCode = char.charCodeAt(0)
       return charCode > 127 ? unicodeCharEscape(charCode) : char
     })
-    .join("")
+    .join('')
 }
 
 /**
@@ -52,25 +52,25 @@ function unicodeEscape(string) {
   * @private
   */
 function JSOND(data) {
-  if (data == null) return "null" //python gives a fuck about "undefined"
+  if (data == null) return 'null' //python gives a fuck about 'undefined'
   switch (typeof data) {
-  case "number":
-  case "boolean":
+  case 'number':
+  case 'boolean':
     return JSON.stringify(data) //hand off primitives to JSON.stringify
     break;
-  case "string":
+  case 'string':
     return unicodeEscape(JSON.stringify(data)) //strings are special because unicode
     break;
-  case "object":
+  case 'object':
     if (Array.isArray(data)) {
-      return "[" + data.map(JSOND).join(", ") + "]"
+      return '[' + data.map(JSOND).join(', ') + ']'
     } else {
-      return "{" + Object.keys(data).map(key =>
-        '"' + key + '": ' + JSOND(data[key])).join(", ") + "}"
+      return '{' + Object.keys(data).map(key =>
+        '"' + key + '": ' + JSOND(data[key])).join(', ') + '}'
     }
     break;
   default:
-    throw new Error("Cannot handle unknown type " + typeof data + "! Report as ZeroNetJS Bug!")
+    throw new Error('Cannot handle unknown type ' + typeof data + '! Report as ZeroNetJS Bug!')
   }
 }
 
@@ -95,7 +95,7 @@ function PythonJSONDump(data) {
   */
 function GetValidSigners(address, inner_path, data) {
   let valid_signers = []
-  if (inner_path == "content.json") {
+  if (inner_path == 'content.json') {
     if (data.signers) valid_signers = Object.keys(data.signers)
   } else {
     //TODO: multi-user
@@ -111,7 +111,7 @@ function GetValidSigners(address, inner_path, data) {
   * @return {string} - signers_sign data field
   */
 function GetSigners(vs, sr) {
-  return sr + ":" + vs.join(",")
+  return sr + ':' + vs.join(',')
 }
 
 module.exports = {

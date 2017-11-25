@@ -1,31 +1,31 @@
-"use strict"
+'use strict'
 
-const tls = require("tls")
+const tls = require('tls')
 
-const toPull = require("stream-to-pull-stream")
-const Connection = require("interface-connection").Connection
-const sslConfig = require("ssl-config")("modern")
+const toPull = require('stream-to-pull-stream')
+const Connection = require('interface-connection').Connection
+const sslConfig = require('ssl-config')('modern')
 
-const gen = require("./gen")
+const gen = require('./gen')
 
-const debug = require("debug")
-const log = debug("zeronet:crypto:tls")
+const debug = require('debug')
+const log = debug('zeronet:crypto:tls')
 
-const toSocket = require("pull-stream-to-net-socket")
+const toSocket = require('pull-stream-to-net-socket')
 
 function basicCrypto(type, protocol, handler) {
   let cert, certq = []
   gen[type]((err, _cert) => {
     cert = _cert
-    log("got cert for %s queue %s", type, certq.length)
+    log('got cert for %s queue %s', type, certq.length)
     certq.forEach(c => c())
     certq = null
   })
 
-  protocol.crypto.add("tls-" + type, (conn, opt, cb) => {
-    log("tls init", type, opt)
+  protocol.crypto.add('tls-' + type, (conn, opt, cb) => {
+    log('tls init', type, opt)
     const final = (err, client) => {
-      log("tls success?", err ? true : err)
+      log('tls success?', err ? true : err)
       if (err) return cb(err)
       cb(null, new Connection(toPull.duplex(client), conn))
     }
@@ -54,7 +54,7 @@ module.exports = function TLSSupport(protocol) {
 }
 
 module.exports.tls_rsa = (protocol) => {
-  basicCrypto("rsa", protocol, {
+  basicCrypto('rsa', protocol, {
     server: (cert) => tls.createServer({
       key: cert.key,
       cert: cert.cert,
@@ -74,7 +74,7 @@ module.exports.tls_rsa = (protocol) => {
 
 /* TODO: fix and rewrite
 module.exports.tls_ecc = (protocol) => {
-  basicCrypto("ecc", protocol, (opt, host, port, cert, ready, cb) => {
+  basicCrypto('ecc', protocol, (opt, host, port, cert, ready, cb) => {
     let stream
     if (opt.isServer) {
       stream = tls.connect({
@@ -85,8 +85,8 @@ module.exports.tls_ecc = (protocol) => {
         cert: cert.cert,
         requestCert: false,
         rejectUnauthorized: false,
-        ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:" +
-          "!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
+        ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:' +
+          '!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK',
         honorCipherOrder: true,
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       })
@@ -100,7 +100,7 @@ module.exports.tls_ecc = (protocol) => {
         secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
       }, cb)
     }
-    stream.on("secureConnect", () => cb(null, stream))
+    stream.on('secureConnect', () => cb(null, stream))
     ready(null, stream)
   })
 }

@@ -1,10 +1,10 @@
-"use strict"
+'use strict'
 
-const forge = require("node-forge")
-const debug = require("debug")
-const log = debug("zeronet-crypto:gen")
+const forge = require('node-forge')
+const debug = require('debug')
+const log = debug('zeronet-crypto:gen')
 const pki = forge.pki
-const openssl = require("./openssl")
+const openssl = require('./openssl')
 
 const attrs = [{
   name: 'commonName',
@@ -60,11 +60,11 @@ const certSet = [{
 }]
 
 function validate(what, fields) {
-  if (!what) throw new Error("Invalid! Value is false!")
+  if (!what) throw new Error('Invalid! Value is false!')
   fields.forEach(field => {
     const v = what[field]
-    if (!v || !v.trim()) throw new Error("Invalid! Field " + field + " is empty!")
-    if (typeof v != "string") throw new Error("Invalid! Field " + field + " is not a string!")
+    if (!v || !v.trim()) throw new Error('Invalid! Field ' + field + ' is empty!')
+    if (typeof v != 'string') throw new Error('Invalid! Field ' + field + ' is not a string!')
   })
   return what
 }
@@ -92,16 +92,16 @@ function rsa() { //x509 2k rsa cert
   var pem = pki.certificateToPem(cert)
 
   return validate({
-    cert: new Buffer(pem).toString("hex"),
-    key: new Buffer(pki.privateKeyToPem(keys.privateKey)).toString("hex")
-  }, ["cert", "key"])
+    cert: new Buffer(pem).toString('hex'),
+    key: new Buffer(pki.privateKeyToPem(keys.privateKey)).toString('hex')
+  }, ['cert', 'key'])
 }
 
 function rsa_fast() { //openssl is A LOT faster
   try {
-    return validate(openssl.x509(), ["cert", "key"])
+    return validate(openssl.x509(), ['cert', 'key'])
   } catch (e) {
-    log("rsa_fast fail, use default")
+    log('rsa_fast fail, use default')
     log(e)
     try {
       return rsa()
@@ -111,20 +111,20 @@ function rsa_fast() { //openssl is A LOT faster
   }
 }
 
-const cp = require("child_process")
+const cp = require('child_process')
 
 let w, q
-const Queue = require("data-queue")
+const Queue = require('data-queue')
 
 function spawnWorker(cb) {
-  log("spawning worker")
+  log('spawning worker')
   const env = Object.assign({}, process.env)
   env.IS_TLS_GEN_WORKER = 1
   w = cp.fork(__filename, {
     env,
-    stdio: "inherit"
+    stdio: 'inherit'
   })
-  w.once("message", m => cb(!m.ready))
+  w.once('message', m => cb(!m.ready))
 }
 
 function doTask(t) {
@@ -142,7 +142,7 @@ function doTask(t) {
           const t = setTimeout(() => {
             q.error(true)
             w.send({
-              type: "die"
+              type: 'die'
             })
             w = null
             q = null
@@ -151,18 +151,18 @@ function doTask(t) {
             if (e) return
             clearTimeout(t)
             w.send({
-              type: "gen",
+              type: 'gen',
               key: d.t
             })
-            log("sending work to worker")
-            w.once("message", m => {
-              log("work finished")
+            log('sending work to worker')
+            w.once('message', m => {
+              log('work finished')
               if (m.r) {
                 for (var p in m.r)
-                  m.r[p] = Buffer.from(m.r[p], "hex")
+                  m.r[p] = Buffer.from(m.r[p], 'hex')
                 d.cb(null, m.r)
               } else if (m.err) {
-                const e = new Error("Keygen failed")
+                const e = new Error('Keygen failed')
                 e.stack = m.err
                 d.cb(e)
               }
@@ -172,7 +172,7 @@ function doTask(t) {
         }
         gloop()
 
-        log("adding task for %s to new worker", t)
+        log('adding task for %s to new worker', t)
         if (q.append({
             cb,
             t
@@ -180,7 +180,7 @@ function doTask(t) {
       })
 
     } else {
-      log("adding task for %s to existing worker", t)
+      log('adding task for %s to existing worker', t)
       if (q.append({
           cb,
           t
@@ -190,7 +190,7 @@ function doTask(t) {
 }
 
 if (!process.env.IS_TLS_GEN_WORKER) {
-  module.exports.rsa = doTask("rsa")
+  module.exports.rsa = doTask('rsa')
 } else {
   const types = openssl.supported() ? {
     rsa,
@@ -201,20 +201,20 @@ if (!process.env.IS_TLS_GEN_WORKER) {
   process.send({
     ready: true
   })
-  process.on("message", (msg) => {
-    if (msg.type == "die") {
-      log("worker: exiting")
+  process.on('message', (msg) => {
+    if (msg.type == 'die') {
+      log('worker: exiting')
       process.exit(0)
-    } else if (msg.type == "gen") {
-      if (types[msg.key + "_fast"]) msg.key += "_fast"
-      log("worker: doing work %s", msg.key)
+    } else if (msg.type == 'gen') {
+      if (types[msg.key + '_fast']) msg.key += '_fast'
+      log('worker: doing work %s', msg.key)
       try {
         process.send({
           r: types[msg.key]()
         })
-        log("worker: work success")
+        log('worker: work success')
       } catch (e) {
-        log("worker: work failed")
+        log('worker: work failed')
         process.send({
           e: e.stack
         })

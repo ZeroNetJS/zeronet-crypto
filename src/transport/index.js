@@ -1,5 +1,5 @@
 module.exports = {
-  secio: require("./secio"),
-  tls: require("./tls/node"),
-  protocol: require("./protocol")
+  secio: require('./secio'),
+  tls: require('./tls/node'),
+  protocol: require('./protocol')
 }
