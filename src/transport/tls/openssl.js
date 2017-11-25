@@ -8,19 +8,20 @@ const path = require('path')
 const debug = require('debug')
 const log = debug('zeronet:crypto:openssl')
 
-const certRegex = /-----BEGIN ([A-Z ]+)-----\n([A-Za-z0-9+\/\n=]+)\n-----END ([A-Z ]+)-----/g
+const certRegex = /-----BEGIN ([A-Z ]+)-----\n([A-Za-z0-9+/\n=]+)\n-----END ([A-Z ]+)-----/g
 
-function getMatches(string, regex, indexes) {
+function getMatches (string, regex, indexes) {
   indexes = indexes || [1] // default to the first capturing group
   var matches = []
   var match
+  const matcher = index => match[index]
   while ((match = regex.exec(string))) {
-    matches.push(indexes.map(index => match[index]))
+    matches.push(indexes.map(matcher))
   }
   return matches
 }
 
-function spawnOpenssl(args) {
+function spawnOpenssl (args) {
   if (!args) args = []
   log('spawn openssl', args.join(' '))
   const p = cp.spawnSync('openssl', args, {
@@ -35,7 +36,7 @@ function spawnOpenssl(args) {
   return p
 }
 
-function getCerts(p, ex) {
+function getCerts (p, ex) {
   const o = {}
   getMatches(ex ? p.stdout.toString() + ex.toString() : p.stdout.toString(), certRegex, [1, 0]).forEach(m => (o[m[0]] = m[1]))
   return o

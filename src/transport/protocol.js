@@ -2,14 +2,14 @@
 
 const debug = require('debug')
 
-function Crypto(opt) {
+function Crypto (opt) {
   const self = this
   self.name = opt.name
   self.getSocket = opt.wrapper
 }
 
-module.exports = function ZeroNetCrypto(protocol) {
-  function ZeroNetCrypto() {
+module.exports = function ZeroNetCrypto (protocol) {
+  function ZeroNetCrypto () {
     protocol.cryptos = []
     const me = this
     const log = debug('zeronet:crypto')

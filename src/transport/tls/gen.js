@@ -59,17 +59,17 @@ const certSet = [{
   name: 'subjectKeyIdentifier'
 }]
 
-function validate(what, fields) {
+function validate (what, fields) {
   if (!what) throw new Error('Invalid! Value is false!')
   fields.forEach(field => {
     const v = what[field]
     if (!v || !v.trim()) throw new Error('Invalid! Field ' + field + ' is empty!')
-    if (typeof v != 'string') throw new Error('Invalid! Field ' + field + ' is not a string!')
+    if (typeof v !== 'string') throw new Error('Invalid! Field ' + field + ' is not a string!')
   })
   return what
 }
 
-function rsa() { //x509 2k rsa cert
+function rsa () { // x509 2k rsa cert
   // generate a keypair and create an X.509v3 certificate
   var keys = pki.rsa.generateKeyPair(2048)
   var cert = pki.createCertificate()
@@ -92,16 +92,16 @@ function rsa() { //x509 2k rsa cert
   var pem = pki.certificateToPem(cert)
 
   return validate({
-    cert: new Buffer(pem).toString('hex'),
-    key: new Buffer(pki.privateKeyToPem(keys.privateKey)).toString('hex')
+    cert: Buffer.from(pem).toString('hex'),
+    key: Buffer.from(pki.privateKeyToPem(keys.privateKey)).toString('hex')
   }, ['cert', 'key'])
 }
 
-function rsa_fast() { //openssl is A LOT faster
+function rsaFast () { // openssl is A LOT faster
   try {
     return validate(openssl.x509(), ['cert', 'key'])
   } catch (e) {
-    log('rsa_fast fail, use default')
+    log('rsaFast fail, use default')
     log(e)
     try {
       return rsa()
@@ -116,7 +116,7 @@ const cp = require('child_process')
 let w, q
 const Queue = require('data-queue')
 
-function spawnWorker(cb) {
+function spawnWorker (cb) {
   log('spawning worker')
   const env = Object.assign({}, process.env)
   env.IS_TLS_GEN_WORKER = 1
@@ -124,10 +124,10 @@ function spawnWorker(cb) {
     env,
     stdio: 'inherit'
   })
-  w.once('message', m => cb(!m.ready))
+  w.once('message', m => cb(!m.ready)) // eslint-disable-line standard/no-callback-literal
 }
 
-function doTask(t) {
+function doTask (t) {
   return cb => {
     if (!q) {
       q = Queue()
@@ -138,7 +138,7 @@ function doTask(t) {
           return cb(err)
         }
 
-        function gloop() {
+        function gloop () {
           const t = setTimeout(() => {
             q.error(true)
             w.send({
@@ -158,8 +158,9 @@ function doTask(t) {
             w.once('message', m => {
               log('work finished')
               if (m.r) {
-                for (var p in m.r)
+                for (var p in m.r) {
                   m.r[p] = Buffer.from(m.r[p], 'hex')
+                }
                 d.cb(null, m.r)
               } else if (m.err) {
                 const e = new Error('Keygen failed')
@@ -174,17 +175,16 @@ function doTask(t) {
 
         log('adding task for %s to new worker', t)
         if (q.append({
-            cb,
-            t
-          })) return cb(q.append())
-      })
-
-    } else {
-      log('adding task for %s to existing worker', t)
-      if (q.append({
           cb,
           t
         })) return cb(q.append())
+      })
+    } else {
+      log('adding task for %s to existing worker', t)
+      if (q.append({
+        cb,
+        t
+      })) return cb(q.append())
     }
   }
 }
@@ -194,7 +194,7 @@ if (!process.env.IS_TLS_GEN_WORKER) {
 } else {
   const types = openssl.supported() ? {
     rsa,
-    rsa_fast
+    rsaFast
   } : {
     rsa
   }
@@ -202,11 +202,11 @@ if (!process.env.IS_TLS_GEN_WORKER) {
     ready: true
   })
   process.on('message', (msg) => {
-    if (msg.type == 'die') {
+    if (msg.type === 'die') {
       log('worker: exiting')
       process.exit(0)
-    } else if (msg.type == 'gen') {
-      if (types[msg.key + '_fast']) msg.key += '_fast'
+    } else if (msg.type === 'gen') {
+      if (types[msg.key + 'Fast']) msg.key += 'Fast'
       log('worker: doing work %s', msg.key)
       try {
         process.send({

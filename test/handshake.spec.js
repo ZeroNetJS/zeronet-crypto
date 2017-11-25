@@ -1,19 +1,24 @@
+/* eslint-env mocha */
+/* eslint-disable max-nested-callbacks */
+
 'use strict'
 
-const crypto_data = {
+const cryptoData = {
   secio: require('../src').secio,
-  'tls-rsa': require('../src').tls_rsa,
-  //'tls-ecc': require('../src').tls_ecc
+  'tls-rsa': require('../src').tls_rsa
+  // 'tls-ecc': require('../src').tls_ecc
 }
 
-const cryptos = Object.keys(crypto_data).map(c => {
+const cryptos = Object.keys(cryptoData).map(c => {
   return {
     name: c,
-    fnc: crypto_data[c]
+    fnc: cryptoData[c]
   }
 })
 
-//const ZeroNet = require('zeronet')
+// const ZeroNet = require('zeronet')
+
+const ZeroNet = null
 
 const multiaddr = require('multiaddr')
 
@@ -38,7 +43,7 @@ describe.skip('handshake', () => {
 
         node.swarm.dial(multiaddr('/ip4/127.0.0.1/tcp/25335'), (e, c) => {
           if (e) return cb(e)
-          if (c.handshakeData.commonCrypto() != crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != ' + crypto.name))
+          if (c.handshakeData.commonCrypto() !== crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != ' + crypto.name))
           c.cmd.ping({}, cb)
         })
       })

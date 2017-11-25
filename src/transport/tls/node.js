@@ -13,9 +13,11 @@ const log = debug('zeronet:crypto:tls')
 
 const toSocket = require('pull-stream-to-net-socket')
 
-function basicCrypto(type, protocol, handler) {
-  let cert, certq = []
+function basicCrypto (type, protocol, handler) {
+  let cert
+  let certq = []
   gen[type]((err, _cert) => {
+    if (err) throw err
     cert = _cert
     log('got cert for %s queue %s', type, certq.length)
     certq.forEach(c => c())
@@ -48,7 +50,7 @@ function basicCrypto(type, protocol, handler) {
   })
 }
 
-module.exports = function TLSSupport(protocol) {
+module.exports = function TLSSupport (protocol) {
   module.exports.tls_rsa(protocol)
   // module.exports.tls_ecc(protocol)
 }

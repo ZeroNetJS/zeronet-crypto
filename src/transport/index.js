@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = {
   secio: require('./secio'),
   tls: require('./tls/node'),

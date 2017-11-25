@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 'use strict'
 
 const samples = {
@@ -35,7 +37,7 @@ const cp = require('child_process')
 const bl = require('bl')
 const path = require('path')
 
-it.python = it.skip //TODO: readd
+it.python = it.skip // TODO: readd
 
 describe('json', () => {
   for (let sample in samples) {
