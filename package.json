@@ -43,5 +43,13 @@
     "shell-escape": "^0.2.0",
     "ssl-config": "^1.0.0",
     "stream-to-pull-stream": "^1.7.2"
+  },
+  "devDependencies": {
+    "aegir": "^12.2.0"
+  },
+  "directories": {
+    "test": "test",
+    "src": "src",
+    "lib": "src"
   }
 }
