@@ -24,7 +24,7 @@ const multiaddr = require('multiaddr')
 
 let node
 
-describe.skip('handshake', () => {
+describe.skip('handshake', () => { // TODO: fix and re-add
   cryptos.forEach(crypto => {
     it('should handshake with ' + crypto.name, (cb) => {
       node = ZeroNet({

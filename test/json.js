@@ -37,7 +37,7 @@ const cp = require('child_process')
 const bl = require('bl')
 const path = require('path')
 
-it.python = it.skip // TODO: readd
+it.python = it.skip // TODO: fix and re-add
 
 describe('json', () => {
   for (let sample in samples) {
