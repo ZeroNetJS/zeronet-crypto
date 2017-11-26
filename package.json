@@ -13,7 +13,7 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir-coverage publish"
+    "coverage-publish": "aegir coverage -u"
   },
   "browser": {
     "src/transport/tls/openssl.js": "./src/transport/tls/no-openssl.js",
@@ -34,16 +34,16 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-js#readme",
   "dependencies": {
-    "bitcoinjs-message": "^2.0.0",
+    "bitcoinjs-message": "~2.0.0",
     "data-queue": "0.0.3",
-    "interface-connection": "^0.3.2",
-    "libp2p-secio": "^0.8.1",
-    "multiaddr": "^3.0.1",
-    "node-forge": "^0.7.1",
-    "pull-stream-to-net-socket": "^1.0.0",
-    "shell-escape": "^0.2.0",
-    "ssl-config": "^1.0.0",
-    "stream-to-pull-stream": "^1.7.2"
+    "interface-connection": "~0.3.2",
+    "libp2p-secio": "~0.8.1",
+    "multiaddr": "~3.0.1",
+    "node-forge": "~0.7.1",
+    "pull-stream-to-net-socket": "~1.0.0",
+    "shell-escape": "~0.2.0",
+    "ssl-config": "~1.0.0",
+    "stream-to-pull-stream": "~1.7.2"
   },
   "devDependencies": {
     "aegir": "^12.2.0"
