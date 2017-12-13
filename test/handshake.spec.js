@@ -3,10 +3,14 @@
 
 'use strict'
 
+const Protocol = require('zeronet-protocol').Zero
+const {Duplex, TCPDuplex, skipbrowser, hexcrypt} = require('./util')
+
 const cryptoData = {
   secio: require('../src').secio,
-  'tls-rsa': require('../src').tls.tls_rsa
-  // 'tls-ecc': require('../src').tls.tls_ecc
+  'tls-rsa': require('../src').tls.tls_rsa,
+  // 'tls-ecc': require('../src').tls.tls_ecc,
+  hex: hexcrypt // hex crypto. why not?
 }
 
 const cryptos = Object.keys(cryptoData).map(c => {
@@ -15,9 +19,6 @@ const cryptos = Object.keys(cryptoData).map(c => {
     fnc: cryptoData[c]
   }
 })
-
-const Protocol = require('zeronet-protocol').Zero
-const {Duplex, TCPDuplex, skipbrowser} = require('./util')
 
 let id = require('./id')
 const Id = require('peer-id')
