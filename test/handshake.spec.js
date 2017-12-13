@@ -5,8 +5,8 @@
 
 const cryptoData = {
   secio: require('../src').secio,
-  'tls-rsa': require('../src').tls_rsa
-  // 'tls-ecc': require('../src').tls_ecc
+  'tls-rsa': require('../src').tls.tls_rsa
+  // 'tls-ecc': require('../src').tls.tls_ecc
 }
 
 const cryptos = Object.keys(cryptoData).map(c => {
@@ -16,42 +16,66 @@ const cryptos = Object.keys(cryptoData).map(c => {
   }
 })
 
-// const ZeroNet = require('zeronet')
+const Protocol = require('zeronet-protocol').Zero
+const {Duplex, TCPDuplex, skipbrowser} = require('./util')
 
-const ZeroNet = null
+let id = require('./id')
+const Id = require('peer-id')
 
-const multiaddr = require('multiaddr')
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
 
-let node
-
-describe.skip('handshake', () => { // TODO: fix and re-add
+describe('crypto handshake', () => {
+  before(cb => {
+    Id.createFromJSON(id, (err, id_) => {
+      if (err) return cb(err)
+      id = id_
+      cb()
+    })
+  })
   cryptos.forEach(crypto => {
-    it('should handshake with ' + crypto.name, (cb) => {
-      node = ZeroNet({
-        id: global.id,
-        swarm: {
-          zero: {
-            listen: [
-              '/ip4/127.0.0.1/tcp/25335'
-            ],
-            crypto: crypto.fnc
-          }
-        }
-      })
-      node.start(err => {
-        if (err) return cb(err)
+    (crypto.name.startsWith('tls-') ? skipbrowser(describe) : describe)(crypto.name, () => { // TLS is currently not supported in browsers. TODO: add
+      let protocol, doServer, doClient
 
-        node.swarm.dial(multiaddr('/ip4/127.0.0.1/tcp/25335'), (e, c) => {
-          if (e) return cb(e)
-          if (c.handshakeData.commonCrypto() !== crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshakeData.commonCrypto() + ' != ' + crypto.name))
-          c.cmd.ping({}, cb)
+      before(cb => {
+        protocol = new Protocol({
+          crypto: crypto.fnc,
+          id
+        }, {swarm: {}})
+
+        doServer = protocol.upgradeConn({isServer: true})
+        doClient = protocol.upgradeConn({isServer: false})
+
+        protocol.handle('ping', {}, {body: [
+          b => Boolean(b === 'Pong!')
+        ]}, (data, cb) => cb(null, {body: 'Pong!'}))
+
+        cb()
+      })
+
+      it('should handshake with ' + crypto.name, cb => {
+        const [client, server] = Duplex()
+        doServer(server, err => expect(err).to.not.exist())
+        doClient(client, (err, c) => {
+          if (err) return cb(err)
+          if (c.handshake.local.commonCrypto() !== crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshake.local.commonCrypto() + ' != ' + crypto.name))
+          c.cmd.ping({body: 'Pong!'}, cb)
         })
       })
-    }).timeout(20000)
-  })
 
-  afterEach(function (cb) {
-    this.timeout(5000)
-    node.stop(cb)
+      skipbrowser(it)('should handshake with ' + crypto.name + ' over tcp', cb => {
+        TCPDuplex((err, client, server) => {
+          if (err) return cb(err)
+          doServer(server, err => expect(err).to.not.exist())
+          doClient(client, (err, c) => {
+            if (err) return cb(err)
+            if (c.handshake.local.commonCrypto() !== crypto.name) return cb(new Error('Failing: Wrong crypto used ' + c.handshake.local.commonCrypto() + ' != ' + crypto.name))
+            c.cmd.ping({body: 'Pong!'}, cb)
+          })
+        })
+      })
+    })
   })
 })

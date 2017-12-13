@@ -1,7 +1,7 @@
 {
   "name": "zeronet-crypto",
   "version": "0.0.4",
-  "description": "ZeroNet crypto modules",
+  "description": "Various cryptographic functions for ZeroNet",
   "main": "src/index.js",
   "scripts": {
     "test": "aegir test",
@@ -17,7 +17,8 @@
   },
   "browser": {
     "src/transport/tls/openssl.js": "./src/transport/tls/no-openssl.js",
-    "src/transport/tls/node.js": "./src/transport/tls/browser.js"
+    "src/transport/tls/node.js": "./src/transport/tls/browser.js",
+    "test/tcp-duplex.js": "./test/tcp-duplex-browser.js"
   },
   "keywords": [
     "zeronet",
@@ -38,7 +39,6 @@
     "data-queue": "0.0.3",
     "interface-connection": "~0.3.2",
     "libp2p-secio": "~0.8.1",
-    "multiaddr": "~3.0.1",
     "node-forge": "~0.7.1",
     "pull-stream-to-net-socket": "~1.0.0",
     "shell-escape": "~0.2.0",
@@ -46,7 +46,12 @@
     "stream-to-pull-stream": "~1.7.2"
   },
   "devDependencies": {
-    "aegir": "^12.2.0"
+    "aegir": "^12.2.0",
+    "bl": "^1.2.1",
+    "chai": "^4.1.2",
+    "dirty-chai": "^2.0.1",
+    "libp2p-tcp": "^0.11.1",
+    "zeronet-protocol": "^0.1.2"
   },
   "directories": {
     "test": "test",

@@ -37,13 +37,22 @@ const cp = require('child_process')
 const bl = require('bl')
 const path = require('path')
 
-it.python = it.skip // TODO: fix and re-add
+let py = ['python2', 'python'].filter(py => {
+  try {
+    cp.execSync(py)
+    return true
+  } catch (e) {
+    return false
+  }
+})[0]
+
+if (!py) console.warn('WARN: Python not found!')
 
 describe('json', () => {
   for (let sample in samples) {
-    it.python('should stringify the ' + sample + ' sample like python', done => {
+    (py ? it : it.skip)('should stringify the ' + sample + ' sample like python', done => {
       const s = samples[sample]
-      const p = cp.spawn(it.py, [path.join(__dirname, 'json_convert.py')], {
+      const p = cp.spawn(py, [path.join(__dirname, 'json_convert.py')], {
         stdio: ['pipe', 'pipe', 'inherit']
       })
       p.stdin.write(JSON.stringify(s))
