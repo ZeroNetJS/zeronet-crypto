@@ -51,6 +51,7 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "libp2p-tcp": "^0.11.1",
+    "pull-randomly-split": "^1.0.4",
     "zeronet-protocol": "^0.1.2"
   },
   "directories": {
