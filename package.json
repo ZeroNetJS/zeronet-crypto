@@ -1,6 +1,6 @@
 {
   "name": "zeronet-crypto",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Various cryptographic functions for ZeroNet",
   "main": "src/index.js",
   "scripts": {
