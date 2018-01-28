@@ -1,3 +1,13 @@
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/ZeroNetJS/zeronet-crypto/compare/v0.1.0...v0.2.0) (2018-01-28)
+
+
+### Features
+
+* New API ([4071853](https://github.com/ZeroNetJS/zeronet-crypto/commit/4071853))
+
+
+
 <a name="0.1.0"></a>
 # [0.1.0](https://github.com/ZeroNetJS/zeronet-crypto/compare/v0.0.4...v0.1.0) (2017-12-13)
 
