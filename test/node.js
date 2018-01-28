@@ -1,3 +1,3 @@
 'use strict'
 
-require('./data/json')
+require('./json')
