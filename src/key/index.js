@@ -2,6 +2,7 @@
 
 /* eslint-disable camelcase */
 
+const {ECPair} = require('bitcoinjs-lib')
 const btcMessage = require('bitcoinjs-message')
 
 /**
@@ -11,8 +12,19 @@ const btcMessage = require('bitcoinjs-message')
   * @param {string} signature - Signature of the data
   * @return {boolean} - Returns wether the signature was valid and signed with the key
   */
-function verifySignature (address, data, signature) {
+function verify (address, data, signature) {
   return btcMessage.verify(data, address, signature, '\x18Bitcoin Signed Message:\n')
+}
+
+/**
+  Signs data with a bitcoin signature
+  * @param {string} privateKey - Bitcoin private key in WIF formate
+  * @param {string} data - Data to sign
+  * @return {string} - Base64 encoded signature
+  */
+function sign (privateKey, data) {
+  const pair = ECPair.fromWIF(privateKey)
+  return btcMessage.sign(data, pair.d.toBuffer(32), pair.compressed).toString('base64')
 }
 
 /**
@@ -45,7 +57,8 @@ function GetSigners (valid_signers, signers_required) {
 }
 
 module.exports = {
-  verifySignature,
+  verify,
+  sign,
   constructValidSigners,
   GetSigners
 }

@@ -35,10 +35,11 @@
   },
   "homepage": "https://github.com/ZeroNetJS/zeronet-crypto#readme",
   "dependencies": {
+    "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-message": "^2.0.0",
     "data-queue": "0.0.3",
     "interface-connection": "~0.3.2",
-    "libp2p-secio": "~0.8.1",
+    "libp2p-secio": "~0.9.1",
     "node-forge": "~0.7.1",
     "pull-stream-to-net-socket": "^1.0.0",
     "shell-escape": "~0.2.0",
@@ -46,13 +47,13 @@
     "stream-to-pull-stream": "^1.7.2"
   },
   "devDependencies": {
-    "aegir": "^12.2.0",
+    "aegir": "^12.4.0",
     "bl": "^1.2.1",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "libp2p-tcp": "^0.11.1",
+    "libp2p-tcp": "^0.11.2",
     "pull-randomly-split": "^1.0.4",
-    "zeronet-protocol": "^0.1.2"
+    "zeronet-protocol": "^0.2.0"
   },
   "directories": {
     "test": "test",
