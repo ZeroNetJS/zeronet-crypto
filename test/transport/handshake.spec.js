@@ -4,11 +4,12 @@
 'use strict'
 
 const Protocol = require('zeronet-protocol').Zero
-const {Duplex, TCPDuplex, skipbrowser, hexcrypt} = require('./util')
+const {Duplex, TCPDuplex, skipbrowser, hexcrypt} = require('../util')
+const {transport} = require('../../src')
 
 const cryptoData = {
-  secio: require('../src').secio,
-  'tls-rsa': require('../src').tls.tls_rsa,
+  secio: transport.secio,
+  'tls-rsa': transport.tls.tls_rsa,
   // 'tls-ecc': require('../src').tls.tls_ecc,
   hex: hexcrypt // hex crypto. why not?
 }
