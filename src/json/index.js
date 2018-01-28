@@ -49,11 +49,9 @@ function jsonDump (data) {
     case 'object':
       if (Array.isArray(data)) {
         return '[' + data.map(jsonDump).join(', ') + ']'
-      } else {
-        return '{' + Object.keys(data).map(key =>
-          '"' + key + '": ' + jsonDump(data[key])).join(', ') + '}'
       }
-      break;
+      return '{' + Object.keys(data).map(key =>
+        '"' + key + '": ' + jsonDump(data[key])).join(', ') + '}'
     default:
       throw new Error('Cannot handle unknown type ' + typeof data + '! Report as ZeroNetJS Bug!')
   }
