@@ -1,4 +1,7 @@
 'use strict'
 
-Object.assign(exports, require('./sign'))
-Object.assign(exports, require('./transport'))
+module.exports = {
+  transport: require('./transport'),
+  keys: require('./keys'),
+  json: require('./json')
+}

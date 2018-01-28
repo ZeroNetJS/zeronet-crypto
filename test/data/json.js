@@ -32,7 +32,7 @@ const samples = {
 }
 
 const assert = require('assert')
-const crypto = require('../src')
+const crypto = require('../../src')
 const cp = require('child_process')
 const bl = require('bl')
 const path = require('path')
@@ -59,7 +59,8 @@ describe('json', () => {
       p.stdin.end()
       p.stdout.pipe(bl((err, data) => {
         if (err) return done(err)
-        assert.equal(crypto.PythonJSONDump(s), data.toString(), 'not matching zn-py-dump')
+        assert.equal(crypto.json.dump(s), data.toString(), 'not matching zn-py-dump')
+        assert.deepEqual(s, crypto.json.parse(crypto.json.dump(s)), 'input != output')
         done()
       }))
       p.once('exit', (e, s) => e || s ? done(new Error('Python exited with ' + e || s)) : false)

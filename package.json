@@ -18,7 +18,7 @@
   "browser": {
     "src/transport/tls/openssl.js": "./src/transport/tls/no-openssl.js",
     "src/transport/tls/node.js": "./src/transport/tls/browser.js",
-    "test/tcp-duplex.js": "./test/tcp-duplex-browser.js"
+    "test/util/tcp-duplex.js": "./test/util/tcp-duplex-browser.js"
   },
   "keywords": [
     "zeronet",
