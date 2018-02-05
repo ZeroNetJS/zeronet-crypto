@@ -10,7 +10,7 @@ const {transport} = require('../../src')
 const cryptoData = {
   secio: transport.secio,
   'tls-rsa': transport.tls.tls_rsa,
-  // 'tls-ecc': require('../src').tls.tls_ecc,
+  'tls-ecc': transport.tls.tls_ecc,
   hex: hexcrypt // hex crypto. why not?
 }
 
