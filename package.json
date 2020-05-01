@@ -13,7 +13,9 @@
     "release-minor": "aegir release --type minor",
     "release-major": "aegir release --type major",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage -u"
+    "coverage-publish": "aegir coverage -u",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "browser": {
     "src/transport/tls/openssl.js": "./src/transport/tls/no-openssl.js",
@@ -44,7 +46,8 @@
     "pull-stream-to-net-socket": "^1.0.0",
     "shell-escape": "~0.2.0",
     "ssl-config": "^1.0.0",
-    "stream-to-pull-stream": "^1.7.2"
+    "stream-to-pull-stream": "^1.7.2",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "aegir": "^13.0.5",
@@ -62,5 +65,6 @@
   },
   "contributors": [
     "mkg20001 <mkg20001@gmail.com>"
-  ]
+  ],
+  "snyk": true
 }
