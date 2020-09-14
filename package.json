@@ -40,7 +40,7 @@
     "data-queue": "0.0.3",
     "interface-connection": "~0.3.2",
     "libp2p-secio": "~0.9.2",
-    "node-forge": "~0.7.1",
+    "node-forge": "~0.10.0",
     "pull-stream-to-net-socket": "^1.0.0",
     "shell-escape": "~0.2.0",
     "ssl-config": "^1.0.0",
